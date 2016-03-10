@@ -1,0 +1,88 @@
+{% extends "layout/doc.html" %}
+{% block title %}项目列表{% endblock %}
+
+{% block layout_css %}
+  <style type="text/css">
+
+    body {
+      padding-top: 20px;
+      padding-bottom: 40px;
+    }
+
+    /* Custom container */
+    .container-narrow {
+      margin: 0 auto;
+      max-width: 700px;
+    }
+    .container-narrow > hr {
+      margin: 30px 0;
+    }
+    .my-item{
+      margin: 40px;
+    }
+
+    .container-thumbnails{
+      margin-top: 60px;
+    }
+    .thumbnails li a{
+      color: #888;
+      font-weight: bold;
+    }
+    .thumbnails li a:hover,
+    .thumbnails li a:focus{
+      border-color:#f2f5e9;
+      -webkit-box-shadow:none;
+      box-shadow:none;
+      text-decoration: none;
+      background-color: #f2f5e9;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+
+    <div class="container-narrow">
+
+      <div class="masthead">
+        <div class="btn-group pull-right">
+        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+        无双
+        <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+        <!-- dropdown menu links -->
+          <li><a href="">个人设置</a></li>
+          <li><a href="../">网站首页</a></li>
+          <li><a href="">退出登录</a></li>
+
+        </ul>
+        </div>
+
+        </ul>
+        <h3 class="muted">Phenix-doc</h3>
+      </div>
+
+      <hr>
+
+    <div class="container-thumbnails">
+      <ul class="thumbnails">
+        {% for d in categories %}
+          <li class="span3 text-center">
+            <a class="thumbnail" href="{{ url_for("main.doc_show", category_id=d._id, doc_id=0) }}" title="{{ d.name }}">
+              <p class="my-item">{{ d.name }}</p>
+            </a>
+          </li>  
+        {%endfor%}
+
+        <li class="span3 text-center">
+          <a class="thumbnail" href="{{ url_for("main.doc_item_add") }}" title="添加一个新项目">
+            <p class="my-item ">新建项目&nbsp;<i class="icon-plus"></i></p>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+
+    </div> <!-- /container -->
+
+
+{% endblock %}

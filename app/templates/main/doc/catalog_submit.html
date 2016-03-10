@@ -1,0 +1,155 @@
+{% extends "layout/doc.html" %}
+{% block title %}修改目录{% endblock %}
+
+{% block layout_css %}
+  <style type="text/css">
+    .single-cat{
+      margin: 10px;
+    }
+  </style>
+{% endblock %}
+
+{% block jquery %}
+
+    var item_id = $("#item_id").val();
+
+    $('#edit-cat').modal({
+      "backdrop":'static'
+    });
+
+    getCatList();
+
+    function getCatList(){
+        $.get(
+          "{{ url_for('main.doc_catalog_list_ajax', item_id=category_id) }}",
+          { "item_id": item_id },
+          function(data){
+            $("#show-cat").html('');
+            if (data.success) {
+              json = data.data;
+              //console.log(json);
+              for (var i = 0; i < json.length; i++) {
+                  cat_html ='<a class="badge badge-info single-cat " href="/doc/catalog/submit/'+item_id+'/'+json[i]._id+'">'+json[i].name+'&nbsp;<i class="icon-edit"></i></a>';
+                  $("#show-cat").append(cat_html);
+              };
+
+            };
+            
+          },
+          "json"
+
+          );
+    }
+
+    //保存目录
+    $("#save-cat").click(function(){
+        var cat_name = $("#cat_name").val();
+        var order = $("#order").val();
+        var cat_id = $("#cat_id").val();
+
+        $.post(
+        "{{ url_for('main.doc_catalog_save') }}",
+          {"name": cat_name , "sort": order , "item_id": item_id , "id": cat_id  },
+          function(data){
+            if (data.success) {
+              $("#delete-cat").hide();
+              $("#cat_name").val('');
+              $("#order").val('');
+              $("#cat_id").val('');
+              alert("保存成功！");
+            }else{
+              alert("保存失败！");
+            }
+            getCatList();
+          },
+          "json"
+
+          );
+        return false;
+    });
+
+    //删除目录
+    $("#delete-cat").click(function(){
+      if(confirm('确认删除吗？')){
+          var cat_id = $("#cat_id").val();
+          if (cat_id > 0 ) {
+              $.post(
+                  "/doc/catalog/del",
+                  { id: cat_id  },
+                  function(data){
+                    if (data.success) {
+                      alert("删除成功！");
+                      window.location.href="{{ url_for('main.doc_catalog_submit', category_id=category_id, catalog_id=0) }}";
+                    }else{
+                      alert(data.message);
+                    }
+                  },
+                  "json"
+                );
+          }
+      }
+
+        return false;
+    })
+
+    $(".exist-cat").click(function(){
+      window.location.href="{{ url_for('main.doc_show', category_id=category_id, doc_id=0) }}";
+    });
+
+
+{% endblock %}
+
+{% block content %}
+
+   <div id="edit-cat" class="modal hide fade">
+    <!-- 编辑框 -->
+    <div class="cat-edit">
+        <div class="modal-header">
+        <h4>新建/编辑目录</h4>
+        </div>
+        <input type="hidden" id="item_id" value="{{ category_id }}">
+        <input type="hidden" id="cat_id" value="{{ catalog._id }}">
+        <div class="add-cat">
+            <form class="form-horizontal">
+              <div class="control-group">
+                <label class="control-label" for="inputEmail">目录名</label>
+                <div class="controls">
+                  <input type="text" id="cat_name" placeholder="目录名" value="{{ catalog.name }}">
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputPassword">序号</label>
+                <div class="controls">
+                  <input type="text" id="order" placeholder="可选：顺序数字" value="{{ catalog.sort }}">
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="controls">
+                  <button  class="btn" id="save-cat">保存</button>
+                  {% if mode=='edit' %}
+                    <button  class="btn btn-link" id="delete-cat">删除目录</button>
+                  {%endif%}
+                </div>
+              </div>
+            </form>
+
+        </div>
+      </div>
+    <!-- 目录列表 -->
+    <div class="cat-list">
+      <div class="modal-header">
+      <h4>目录列表&nbsp;<small>（点击可编辑）</small></h4>
+      </div>
+      <div id="show-cat">
+
+      <br>
+      <br>
+      </div>
+    </div>
+
+      <div class="modal-footer">
+        <a href="#" class="btn exist-cat">关闭</a>
+      </div>
+   </div>
+
+{% endblock %}

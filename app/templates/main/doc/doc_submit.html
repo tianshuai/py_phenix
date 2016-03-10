@@ -1,0 +1,552 @@
+{% extends "layout/doc.html" %}
+{% block title %}新建/编辑文档{% endblock %}
+
+{% block layout_css %}
+  <link rel="stylesheet" href="__PUBLIC__/css/page/edit.css" />
+  <link href="{{ url_for('static', filename='editor.md/css/editormd.css') }}" rel="stylesheet">
+  <style type="text/css">
+
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    *, *:before, *:after {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+        body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{
+        margin: 0;
+        padding: 0;
+    }
+
+    article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+        display: block;
+    }
+
+    audio, canvas, video {
+        display: inline-block;
+    }
+
+    img {
+        border: none;
+        vertical-align: middle;
+    }
+
+    ul, ol {
+        /*list-style: none;*/
+    }
+
+    .clear {
+        *zoom: 1;           /* for IE 6/7 */
+    }
+
+    .clear:before, .clear:after {
+        height: 0; 
+        content: "";
+        font-size: 0;
+        display: table;
+        line-height: 0;     /* for Opera */
+        visibility: hidden;
+    }
+
+    .clear:after {
+        clear: both;
+    }
+
+    body {
+        font-size: 14px;
+        color: #666;
+        font-family: "Microsoft YaHei", "微软雅黑", Helvetica, Tahoma, STXihei, "华文细黑", STHeiti, "Helvetica Neue", Helvetica, Tahoma, "Droid Sans", "wenquanyi micro hei", FreeSans, Arimo, Arial, SimSun, "宋体", Heiti, "黑体", sans-serif; 
+        background: #fff;
+        text-align: center;
+    }
+
+    #layout {
+        text-align: left;
+    }
+
+    #layout > header, .btns {
+        padding: 15px 0;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .btns {
+        padding-top: 0;
+    }
+
+    .btns button {
+        padding: 2px 8px;
+    }
+
+    #layout > header > h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .btns button, .btn {
+        padding: 8px 10px;
+        background: #fff;
+        border: 1px solid #ddd;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        cursor: pointer;
+        -webkit-transition: background 300ms ease-out;
+        transition: background 300ms ease-out;
+    }
+
+    .btns button:hover, .btn:hover {
+        background: #f6f6f6;
+    }
+
+    #json-templ{ position:fixed; float:left; top:100px; left:300px; border:2px solid #ccc; display:none; z-index:999999;}
+
+    .markdown-body.editormd-preview-container table tr td{ max-width:300px;}
+
+    .btn-primary {
+        background-color: #006dcc;
+    }
+
+    .btn-primary:hover {
+        background-color: #04c;
+    }
+
+    #page_title,
+    #cat_id,
+    #order {
+        height: 30px;
+    }
+
+    #cat_id {
+        width: 150px;
+    }
+
+    #order {
+        width: 120px;
+        margin-right: 20px;
+    }
+
+  </style>
+{% endblock %}
+
+{% block layout_js %}
+
+  <script src="{{ url_for('static', filename='js/jquery.bootstrap-growl.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.hotkeys.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/editormd.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/image-dialog/image-dialog.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/link-dialog/link-dialog.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/preformatted-text-dialog/preformatted-text-dialog.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/code-block-dialog/code-block-dialog.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/html-entities-dialog/html-entities-dialog.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/goto-line-dialog/goto-line-dialog.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/table-dialog/table-dialog.js') }}"></script>
+  <script src="{{ url_for('static', filename='editor.md/plugins/reference-link-dialog/reference-link-dialog.js') }}"></script>
+
+  <script>
+
+    var editormd;
+
+    var json_table_data='|参数名|类型|说明|\n'+
+        '|:-------|:-------|:-------|\n';
+
+    $(function() {
+      /*加载目录*/
+      getCatList();
+
+      function getCatList() {
+        var default_cat_id = $("#default_cat_id").val();
+        var item_id = $("#item_id").val();
+        $.get(
+          "/doc/catalog/list/"+item_id, {
+            "item_id": item_id
+          },
+          function(data) {
+            $("#cat_id").html('<OPTION value="0">无</OPTION>');
+            if (data.success) {
+              json = data.data;
+              //console.log(json);
+              for (var i = 0; i < json.length; i++) {
+                cat_html = '<OPTION value="' + json[i]._id + '" ';
+                if (default_cat_id == json[i]._id) {
+                  cat_html += ' selected ';
+                }
+
+                cat_html += ' ">' + json[i].name + '</OPTION>';
+                $("#cat_id").append(cat_html);
+              };
+            };
+
+          },
+          "json"
+
+        );
+      }
+
+      var keyMap = {
+        // 保存
+        "Ctrl-S": function() {
+          $("#save").click();
+        }
+      };
+      initEditorOutsideKeys();
+
+      function initEditorOutsideKeys() {
+        if (!editormd) return;
+        var $doc = $(document);
+        $.each(keyMap, function(key, fn) {
+          $doc.on('keydown', null, key.replace('-', '+'), function(e) {
+            e.preventDefault();
+            fn();
+          });
+        });
+      }
+      // 如果是新增页面，则光标为标题文本框
+      if (location.href.indexOf('type=new') !== -1) {
+        setTimeout(function() {
+          $('#page_title').focus();
+        }, 1000);
+      }
+
+      /*初始化编辑器*/
+      editormd = editormd("editormd", {
+        width: "90%",
+        height: 1000,
+        syncScrolling: "single",
+        path: "{{ url_for('static', filename='editor.md/lib/') }}",
+        placeholder: "本编辑器支持Markdown编辑，左边编写，右边预览",
+        imageUpload: true,
+        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp", "JPG", "JPEG", "GIF", "PNG", "BMP", "WEBP"],
+        imageUploadURL: "uploadImg",
+        onload: function() {
+          this.addKeyMap(keyMap);
+        }
+      });
+
+      /*插入API接口模板*/
+      $("#api-doc").click(function() {
+        var tmpl = $("#api-doc-templ").html();
+        editormd.insertValue(tmpl);
+      });
+      /*插入数据字典模板*/
+      $("#database-doc").click(function() {
+        var tmpl = $("#database-doc-templ").html();
+        editormd.insertValue(tmpl);
+      });
+      
+       /*插入JSON*/
+      $("#jsons").click(function() {
+        
+       $("#json-templ").show();
+      
+      });
+      
+        
+      $("#json-templ .editormd-enter-btn").click(function(){
+        
+        
+        var datas=$("#json-templ .jsons").val();
+        
+        try{
+          Change($.parseJSON(datas));   
+        }
+        catch(e){
+          alert("json导入失败" + e);
+        }
+        
+        //datas=processJSONImport(datas);
+        //alert(datas);
+        /*var datas='|键|值|类型|空|注释|\n'+
+        '|:-------|:-------|:-------|:-------|:-------|\n'+
+        '|uid|int(10)|否|||\n'+
+        '|username|varchar(20)|否||用户名|';*/
+        
+        //alert(json_table_data);return;
+        
+        
+        
+        editormd.insertValue(json_table_data);
+        
+        json_table_data='|键|类型|说明|\n'+
+        '|:-------|:-------|:-------|\n';
+        
+        
+        $("#json-templ .jsons").val("");
+        $("#json-templ").hide();
+        
+      });
+      
+
+    //{"dgfgdfg":"gdfgdfg"}
+      
+
+      /*保存*/
+      var saving = false;
+      $("#save").click(function() {
+        if (saving) return false;
+        var page_id = $("#page_id").val();
+        var item_id = $("#item_id").val();
+        var cat_id = $("#cat_id").val();
+        var page_title = $("#page_title").val();
+        var page_content = $("#page_content").val();
+        var item_id = $("#item_id").val();
+        var order = $("#order").val();
+        saving = true;
+        $.post(
+          "{{ url_for('main.doc_save') }}",
+          {
+            "id": page_id,
+            "cat_id": cat_id,
+            "sort": order,
+            "content": page_content,
+            "title": page_title,
+            "item_id": item_id
+          },
+          function(data) {
+            if (data.success) {
+              $.bootstrapGrowl("保存成功！");
+              window.location.href = data.redirect_to;
+            } else {
+              $.bootstrapGrowl(data.message);
+
+            }
+            saving = false;
+          },
+          'json'
+        )
+      });
+
+      $(".editormd-preview-container").bind('DOMNodeInserted', function(e){
+        
+        $(".editormd-preview-container table thead tr").css({"background-color":"#08c","color":"#fff"});
+        $(".editormd-preview-container table tr").eq(0).css({"background-color":"#08c","color":"#fff"});
+        $(".editormd-preview-container table tr").each(function(){
+          if($(this).find("td").eq(1).html()=="object")
+          {
+            $(this).css({"background-color":"#99CC99","color":"#000"});
+          }
+          
+          });
+      });
+
+    });
+
+    function closeDiv(target)
+    {
+      $(target).hide();
+    }
+
+    function Change(data)
+    {
+      var level_str="- ";
+      if(arguments.length>1)
+      {
+        var level;
+        arguments[1]>0?level=arguments[1]:level=1;
+        for(var i=0;i<level;i++)
+        {
+          level_str+="- ";
+        }
+      }
+      
+      for(var key in data)
+      {
+        var value = data[key];
+        var type = typeof(value);
+        if(type == "object")
+        {
+          json_table_data+='| '+level_str+key+' |'+type+'  | 无 |\n';
+          if(value instanceof Array)
+          {
+            var j=level+1;
+            Change(value[0],j);
+            continue;
+          }
+          //else
+          //{
+            Change(value,level);
+          //}
+          
+        }
+        else
+        {
+          json_table_data+='| '+key+' | '+type+'| 无 |\n';
+        }
+      }
+    }
+
+    //{"Result":[{"name":"test1","list":{"pros":"prosfsf","ppps":{"images":[{"22":"22"}]}}}]}
+  
+  </script>
+
+{% endblock %}
+
+{% block content %}
+
+<div id="layout">
+    <!-- 顶部条 -->
+    <header class="row">
+        <div class="head-left  pull-left">
+            <ul class="inline">
+                <li>
+                <input type="text" name="page_title" id="page_title" placeholder="请输入页面标题" value="{{ doc.title }}" tabindex="1">
+                </li>
+                <li>
+                    上级目录：
+                    <select name="cat_id" id="cat_id" tabindex="2"></select>
+                </li>
+                <li>
+                  <input type="text" name="order" id="order" value="{{ doc.sort }}" placeholder="可选：顺序数字"  tabindex="3" >
+                </li>
+                <li>
+                    <!-- 首次添加没有历史版本，不显示 -->
+                    {% if doc %}
+                      {% if doc._id > 0 %}
+                        <a href="history?page_id={{ doc._id }}">历史版本</a>
+                      {% endif %}
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+        <div class="head-right pull-right">
+          <a href="#" class="btn btn-primary " id="save">保存</a>
+            <a href="{{ url_for('main.doc_show', category_id=item_id) }}" class="btn cancel">取消</a>
+        </div>
+    </header>
+    <br>
+    <!-- 插入模板的按钮组 -->
+    <div class="btns">
+        <button id="api-doc" tabindex="4" >插入API接口模板</button>
+        <button id="database-doc" tabindex="5" >插入数据字典模板</button>
+        <button id="jsons" tabindex="7" >JSON转参数表格</button>
+    </div>
+    <div id="editormd">
+      <textarea id="page_content" style="display:none;" tabindex="6" >{{ doc.content }}</textarea>
+    </div>
+    <input type="hidden" id="item_id" value="{{ item_id }}">
+    <input type="hidden" id="page_id" value="{{ doc._id }}">
+    <input type="hidden" id="default_cat_id" value="{{ doc.cat_id }}">
+</div>
+<!-- 模板存放的地方 -->
+<div id="api-doc-templ" style="display:none">
+
+**简要描述：** 
+
+- 用户注册接口
+
+**请求URL：** 
+- ` http://xx.com/api/user/register `
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|username |是  |string |用户名   |
+|password |是  |string | 密码    |
+|name     |否  |string | 昵称    |
+
+ **返回示例**
+
+``` 
+  {
+    "error_code": 0,
+    "data": {
+      "uid": "1",
+      "username": "12154545",
+      "name": "吴系挂",
+      "groupid": 2 ,
+      "reg_time": "1436864169",
+      "last_login_time": "0",
+    }
+  }
+```
+
+ **返回参数说明** 
+
+|参数名|类型|说明|
+|:-----  |:-----|-----                           |
+|groupid |int   |用户组id，1：超级管理员；2：普通用户  |
+
+ **备注** 
+
+- 更多返回错误代码请看首页的错误代码描述
+
+</div>
+<div id="database-doc-templ" style="display:none">
+
+**简要描述：** 
+
+- 用户注册接口
+
+**请求URL：** 
+- ` http://xx.com/api/user/register `
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|username |是  |string |用户名   |
+|password |是  |string | 密码    |
+|name     |否  |string | 昵称    |
+
+ **返回示例**
+
+``` 
+  {
+    "error_code": 0,
+    "data": {
+      "uid": "1",
+      "username": "12154545",
+      "name": "吴系挂",
+      "groupid": 2 ,
+      "reg_time": "1436864169",
+      "last_login_time": "0",
+    }
+  }
+```
+
+ **返回参数说明** 
+
+|参数名|类型|说明|
+|:-----  |:-----|-----                           |
+|groupid |int   |用户组id，1：超级管理员；2：普通用户  |
+
+ **备注** 
+
+- 更多返回错误代码请看首页的错误代码描述
+
+</div>
+<!-- 模板存放的地方End -->
+
+<div id="json-templ" class="editormd-dialog editormd-preformatted-text-dialog" style="width: 780px; height: 540px;">
+
+    <div style="cursor: move;" class="editormd-dialog-header">
+        <strong class="editormd-dialog-title">JSON转参数表格</strong>
+    </div>
+    <a class="fa fa-close editormd-dialog-close" href="javascript:closeDiv('#json-templ');"></a>
+    <div class="editormd-dialog-container">
+        <textarea id="jsons_add" class="jsons" placeholder="请粘贴一段json，程序将自动将json解析并生成参数表格。此功能适合用于快速编写API文档的返回参数表格"></textarea>
+        
+        <div class="editormd-dialog-footer">
+            <button class="editormd-btn editormd-enter-btn">确定</button>
+            <button class="editormd-btn editormd-cancel-btn" onclick="closeDiv('#json-templ')">取消</button>
+        </div>
+    </div>
+    <div class="editormd-dialog-mask editormd-dialog-mask-bg"></div><div class="editormd-dialog-mask editormd-dialog-mask-con"></div>
+</div>
+
+
+<include file="Common/footer" />
+
+
+
+
+{% endblock %}

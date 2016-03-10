@@ -1,0 +1,88 @@
+{% extends "layout/doc.html" %}
+{% block title %}添加项目{% endblock %}
+
+{% block layout_css %}
+  <style type="text/css">
+    body {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #f5f5f5;
+    }
+
+    .form-category {
+      max-width: 300px;
+      padding: 19px 29px 29px;
+      margin: 0 auto 20px;
+      background-color: #fff;
+      border: 1px solid #e5e5e5;
+      -webkit-border-radius: 5px;
+         -moz-border-radius: 5px;
+              border-radius: 5px;
+      -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+         -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+              box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    }
+    .form-category .form-signin-heading,
+    .form-category .checkbox {
+      margin-bottom: 10px;
+    }
+    .form-signin input[type="text"],
+    .form-signin input[type="password"] {
+      font-size: 16px;
+      height: auto;
+      margin-bottom: 15px;
+      padding: 7px 9px;
+    }
+  </style>
+{% endblock %}
+
+{% block jquery %}
+
+$("#form-category").validate({
+  //ignore: ".ignore",
+  //debug: true,
+
+  rules: {
+    name: "required"
+  },
+
+  messages: {
+    name: "请输入项目名称"
+  },
+  submitHandler: function(form) {
+    $(form).ajaxSubmit({
+      dataType: 'json',
+      beforeSubmit: function(){
+        //alert('before'); 
+      },
+      success: function(data){
+        if(data.success){
+          window.location.href=data.redirect_to;
+        }else{
+          alert(data.message);
+        }
+      }
+    });
+  }
+ });
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+      <form class="form-category" method="post" action="{{ url_for("main.doc_item_save") }}" id="form-category">
+        <input type="hidden" id="id" name="id" value="">
+        <!-- <h3 class="form-signin-heading">新建项目</h3> -->
+        <input type="text" class="input-block-level"  name="name" placeholder="项目名" value="" >
+        <input type="hidden" name="domain" value=1 />
+
+        <button class="btn  btn-primary" type="submit">提交</button>
+        <a href="{{ url_for("main.doc_item_list") }}" class="btn">返回</a>
+      </form>
+
+    </div> <!-- /container -->
+
+
+{% endblock %}

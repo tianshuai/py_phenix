@@ -1,0 +1,74 @@
+{% extends "layout/doc.html" %}
+{% block title %}doc{% endblock %}
+
+{% block layout_css %}
+  <style type="text/css">
+    body {
+      padding-top: 20px;
+      padding-bottom: 40px;
+    }
+
+    /* Custom container */
+    .container-narrow {
+      margin: 0 auto;
+      max-width: 700px;
+    }
+    .container-narrow > hr {
+      margin: 30px 0;
+    }
+
+    /* Main marketing message and sign up button */
+    .jumbotron {
+      margin: 60px 0;
+      text-align: center;
+    }
+    .jumbotron h1 {
+      font-size: 72px;
+      line-height: 1;
+    }
+    .jumbotron .btn {
+      font-size: 21px;
+      padding: 14px 24px;
+    }
+
+    /* Supporting marketing content */
+    .marketing {
+      margin: 60px 0;
+    }
+    .marketing p + h4 {
+      margin-top: 28px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-narrow">
+
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li ><a href="{{ url_for("main.doc_item_list") }}">我的项目</a></li>
+            <!--<li ><a href="">登录/注册</a></li>-->
+          
+        </ul>
+        <h3 class="muted">Phenix-doc</h3>
+      </div>
+
+      <hr>
+
+		<p class="text-center">
+			<a class="btn btn-primary  btn-large" href="{:U('Home/item/show').'?item_id=2'}" target="_blank">Demo</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a class="btn  btn-large" href="{:U('Home/item/show').'?item_id=3'}" target="_blank" >帮助教程&nbsp;<i class="icon-circle-arrow-right"></i></a>
+		</p>
+
+      <hr>
+
+
+      <div class="footer">
+        <p>&copy; Created By <a href="" target="_blank"> TianShuai-Taihuoniao</a></p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+{% endblock %}
