@@ -1,4 +1,4 @@
-
+#encoding: utf-8
 from flask import Flask 
 from .config import PROJDIR
 from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
@@ -10,7 +10,6 @@ app = Flask(__name__,
 
 app.config.from_pyfile('config.py') #  这里config.py是文件
 
-app.config["MONGODB_SETTINGS"] = {"DB":"tian", 'alias':'default'}
 db = MongoEngine(app)
 #app.session_interface = MongoEngineSessionInterface(db)
 
