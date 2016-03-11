@@ -437,28 +437,31 @@
 - 用户注册接口
 
 **请求URL：** 
-- ` http://xx.com/api/user/register `
+- ` http://t.taihuoniao.com/app/api/ `
   
 **请求方式：**
 - POST 
 
 **参数：** 
 
-|参数名|必选|类型|说明|
-|:----    |:---|:----- |-----   |
-|username |是  |string |用户名   |
-|password |是  |string | 密码    |
-|name     |否  |string | 昵称    |
+|参数名|类型|逻辑名|约束|默认值
+|:----    |:---|:----- |-----   |------
+|page |Integer  |当前页 |NOT NULL   |1
+|size |Integer  |第几页 | NOT NULL    |8
+|sort     |Integer  |排序 | NOT NULL    |0
 
  **返回示例**
 
 ``` 
   {
-    "error_code": 0,
+    "success" : true|false,
+    "error_code": true|false,
+    "message" : "说明",
+    "current_user_id" : 0,
     "data": {
       "uid": "1",
       "username": "12154545",
-      "name": "吴系挂",
+      "name": "吴xx",
       "groupid": 2 ,
       "reg_time": "1436864169",
       "last_login_time": "0",
@@ -484,28 +487,30 @@
 - 用户注册接口
 
 **请求URL：** 
-- ` http://xx.com/api/user/register `
+- ` http://t.taihuoniao.com/app/api/ `
   
 **请求方式：**
 - POST 
 
 **参数：** 
 
-|参数名|必选|类型|说明|
-|:----    |:---|:----- |-----   |
-|username |是  |string |用户名   |
-|password |是  |string | 密码    |
-|name     |否  |string | 昵称    |
-
+|参数名|类型|逻辑名|约束|默认值
+|:----    |:---|:----- |-----   |------
+|page |Integer  |当前页 |NOT NULL   |1
+|size |Integer  |第几页 | NOT NULL    |8
+|sort     |Integer  |排序 | NOT NULL    |0
  **返回示例**
 
 ``` 
   {
-    "error_code": 0,
+    "success" : true|false,
+    "error_code": true|false,
+    "message" : "说明",
+    "current_user_id" : 0,
     "data": {
       "uid": "1",
       "username": "12154545",
-      "name": "吴系挂",
+      "name": "吴xx",
       "groupid": 2 ,
       "reg_time": "1436864169",
       "last_login_time": "0",
@@ -542,11 +547,6 @@
     </div>
     <div class="editormd-dialog-mask editormd-dialog-mask-bg"></div><div class="editormd-dialog-mask editormd-dialog-mask-con"></div>
 </div>
-
-
-<include file="Common/footer" />
-
-
 
 
 {% endblock %}
