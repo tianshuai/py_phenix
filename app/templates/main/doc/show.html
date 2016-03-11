@@ -239,7 +239,7 @@
           $("#page-content").attr("src" , base_url+"/sub_show/"+page_id);
           $("#edit-link").attr("href" , base_url+"/submit/"+item_id+"/"+page_id);
           $("#copy-link").attr("href" , base_url+"/submit/"+item_id+"/"+page_id);
-          $("#share-page-link").html("http://"+window.location.host+base_url+"/"+item_id+"?page_id="+page_id);
+          $("#share-page-link").html("http://"+window.location.host+base_url+"/show/"+item_id+"?doc_id="+page_id);
           $("#delete-link").attr("href" , base_url+"/delete/"+page_id);
       }
 
@@ -405,9 +405,9 @@
           <ul class="inline">
             {% if 1==1 %}
               <li><a href="" id="share-page" title="分享该接口访问地址给你的好友">分享</a></li>
-              <li><a href="" id="copy-link" title="复制该接口到新接口">复制</a></li>
+              <!--<li><a href="" id="copy-link" title="复制该接口到新接口">复制</a></li>-->
               <li><a href="" id="edit-link" title="编辑接口">编辑</a></li>
-              <li><a href="" title="删除接口" onclick="return confirm('确认删除吗？');return false;" id="delete-link">删除</a></li>
+              <!--<li><a href="" title="删除接口" onclick="return confirm('确认删除吗？');return false;" id="delete-link">删除</a></li>-->
               {% else %}
               <li></li>
               <li></li>

@@ -58,7 +58,7 @@
         </div>
 
         </ul>
-        <h3 class="muted">Phenix-doc</h3>
+        <h3 class="muted">Phenix-Doc</h3>
       </div>
 
       <hr>
@@ -67,7 +67,7 @@
       <ul class="thumbnails">
         {% for d in categories %}
           <li class="span3 text-center">
-            <a class="thumbnail" href="{{ url_for("main.doc_show", category_id=d._id, doc_id=0) }}" title="{{ d.name }}">
+            <a class="thumbnail" href="{{ url_for("main.doc_show", category_id=d._id) }}" title="{{ d.name }}">
               <p class="my-item">{{ d.name }}</p>
             </a>
           </li>  
@@ -81,8 +81,6 @@
       </ul>
     </div>
 
-
     </div> <!-- /container -->
-
 
 {% endblock %}
