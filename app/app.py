@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template
+from flask import Flask 
 from .config import PROJDIR
 from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
 

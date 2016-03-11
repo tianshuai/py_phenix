@@ -7,5 +7,11 @@ CONFDIR = os.path.join(PROJDIR, 'etc')
 #MONGODB_HOST = 'localhost'
 #MONGODB_PORT = 27017
 
+# babel settings
+BABEL_DEFAULT_LOCALE = 'zh'
+BABEL_SUPPORTED_LOCALES = ['zh']
+
+DEBUG = True
+
 CSRF_ENABLED = True
 SECRET_KEY = 'taihuoniao_tools'
