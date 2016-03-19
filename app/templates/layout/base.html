@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap-3.3.5-dist/css/bootstrap.min.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" type="text/css" />
     <link href="{{ url_for('static', filename='css/doc.css') }}" rel="stylesheet">
@@ -34,14 +34,24 @@
   {% endwith %}
 
     {% block layout_header %}{% endblock %}
+
+    <div class="container">
+      <div class="main">
+        <!--消息提醒-->
+        <%= render partial: 'shared/flash',locals: { flash: flash }%>
+      </div>
+      <span class="blank50"></span>
+
     {% block layout_content %}
-        {% block content %}{% endblock %}
+          {% block content %}{% endblock %}
     {% endblock %}
+    </div>
+
 		{% block layout_footer %}{% endblock %}
 
 
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.2.1.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap-3.3.5-dist/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.form.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.validate.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/showdoc.js') }}"></script>

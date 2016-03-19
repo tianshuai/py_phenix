@@ -6,6 +6,6 @@ main = Blueprint('main', __name__, static_url_path='/static',
 
 class BaseMain():
     def __init__(self):
-        a=1
+        pass
         #self._obj = kwargs.get('obj', None)
         #super(BaseForm, self).__init__(*args, **kwargs)

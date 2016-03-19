@@ -2,6 +2,7 @@ from flask import render_template, jsonify, url_for, request, redirect, flash
 from .base import main 
 from ..models import Category, Catalog, Doc
 from ..helpers import force_int
+# markdown 格式转换
 import mistune
 
 
