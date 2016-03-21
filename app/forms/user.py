@@ -57,9 +57,9 @@ class SignupForm(BaseForm):
         if User.objects(account=data).count():
             raise ValueError('该用户名已被注册过')
 
-    #def validate_email(self, field):
-     #   if Account.query.filter_by(email=field.data.lower()).count():
-      #      raise ValueError(_('This email has been registered.'))
+    def validate_account(self, field):
+        if User.objects(account=account).first():
+            raise ValueError('This account has been registered.')
 
     def save(self):
         user = User(**self.data)

@@ -27,11 +27,10 @@ def register():
     form = SignupForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            return jsonify(success=False, message='OK')
+            form.save();
+            return jsonify(success=True, message='注册成功!')
         else:
             return jsonify(success=False, message=str(form.errors))
-    else:
-        pass
 
     return render_template('auth/register.html', form=form)
 
