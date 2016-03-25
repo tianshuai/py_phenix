@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, url_for, request, redirect, flash
+from flask import render_template, jsonify, url_for, request, redirect, flash, g
 from .base import main 
 from ..models import Category, Catalog, Doc
 from ..helpers import force_int, require_staff, require_admin
@@ -37,7 +37,7 @@ def doc_item_save():
     #if 'Like' in request.form.values():
     name = request.form['name']
     domain = force_int(request.form['domain'], 0)
-    user_id = 1
+    user_id = g.user._id
 
     if name=='' or domain==0:
         return jsonify(success=False, message='缺少请求参数!')
@@ -97,7 +97,7 @@ def doc_catalog_save():
         return jsonify(success=False, message='缺少请求参数!')
     try:
         if id==0:
-            user_id = 1
+            user_id = g.user._id
             catalog = Catalog(name=name, item_id=item_id, user_id=user_id, sort=sort)
             catalog.save()
         else:
@@ -168,7 +168,7 @@ def doc_save():
         return jsonify(success=False, message='缺少请求参数!')
     try:
         if id==0:
-            user_id = 1
+            user_id = g.user._id
             doc = Doc(title=title, content=content, item_id=item_id, cat_id=cat_id, user_id=user_id, sort=sort)
             doc.save()
         else:
