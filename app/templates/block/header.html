@@ -23,17 +23,23 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
+
+        {%- if g.user %}
 				<li class="dropdown">
-				  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tian<b class="caret"></b></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ g.user.account }}<b class="caret"></b></a>
 				  <ul class="dropdown-menu">
             <li><a href="">个人设置</a></li>
+            {% if g.is_admin %}
             <li><a href="">系统管理</a></li>
+            {%endif%}
 					<li class="divider"></li>
-          <li><a href="">注销</a></li>
+          <li><a href="{{ url_for('main.logout') }}">注销</a></li>
 				  </ul>
 				</li>
+        {%else%}
         <li><a href="{{ url_for('main.register') }}">注册</a></li>
         <li><a href="{{ url_for('main.login') }}">登录</a></li>
+        {%endif%}
           </ul>
         </div>
       </div>

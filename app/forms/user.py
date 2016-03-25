@@ -7,6 +7,7 @@ from flask.ext.wtf.recaptcha import RecaptchaField
 
 from .base import BaseForm
 from ..models import User 
+from ..helpers import *
 
 RESERVED_WORDS = [
     'root', 'admin', 'bot', 'robot', 'master', 'webmaster',
@@ -37,11 +38,11 @@ class SigninForm(BaseForm):
             user = User.objects(account=account).first()
 
         if not user:
-            raise ValueError('账号或密码不正确!')
-        if user.check_password(field.data):
+            raise ValueError('账号不存在!')
+        if user.check_password(self.password.data, account):
             self.user = user
             return user
-        raise ValueError('账号或密码不正确')
+        raise ValueError('账号或密码不正确!')
 
 
 class SignupForm(BaseForm):
@@ -51,17 +52,19 @@ class SignupForm(BaseForm):
     password_confirm = PasswordField('确认密码', validators=[DataRequired(message="确认密码"), EqualTo('password', message='密码不一致')])
 
     def validate_account(self, field):
+        account = self.account.data
         data = field.data.lower()
         if data in RESERVED_WORDS:
             raise ValueError('不允许使用此用户名')
-        if User.objects(account=data).count():
-            raise ValueError('该用户名已被注册过')
 
     def validate_account(self, field):
+        account = self.account.data
         if User.objects(account=account).first():
-            raise ValueError('This account has been registered.')
+            raise ValueError('账号已存在')
 
     def save(self):
-        user = User(**self.data)
+        data = self.data;
+        data.pop('password_confirm')
+        user = User(**data)
         user.save()
         return user

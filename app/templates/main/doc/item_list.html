@@ -45,14 +45,14 @@
       <div class="masthead">
         <div class="btn-group pull-right">
         <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-        无双
+          {{ g.user.account }}
         <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
         <!-- dropdown menu links -->
-          <li><a href="">个人设置</a></li>
+        <!--<li><a href="">个人设置</a></li>-->
           <li><a href="../">网站首页</a></li>
-          <li><a href="">退出登录</a></li>
+          <li><a href="{{ url_for('main.logout') }}">退出登录</a></li>
 
         </ul>
         </div>
@@ -73,11 +73,13 @@
           </li>  
         {%endfor%}
 
+        {% if g.is_admin %}
         <li class="span3 text-center">
           <a class="thumbnail" href="{{ url_for("main.doc_item_add") }}" title="添加一个新项目">
             <p class="my-item ">新建项目&nbsp;<i class="icon-plus"></i></p>
           </a>
         </li>
+        {%endif%}
       </ul>
     </div>
 

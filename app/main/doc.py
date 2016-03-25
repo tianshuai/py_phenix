@@ -1,7 +1,7 @@
 from flask import render_template, jsonify, url_for, request, redirect, flash
 from .base import main 
 from ..models import Category, Catalog, Doc
-from ..helpers import force_int
+from ..helpers import force_int, require_staff, require_admin
 # markdown 格式转换
 import mistune
 
@@ -14,6 +14,7 @@ def doc():
 
 # 项目列表
 @main.route('/doc/item_list')
+@require_staff
 def doc_item_list():
     categories = Category.objects(domain=1)
 
@@ -22,12 +23,14 @@ def doc_item_list():
 
 # 添加项目
 @main.route('/doc/item_add')
+@require_admin
 def doc_item_add():
     return render_template('doc/item_add.html')
 
 
 # 保存项目
 @main.route('/doc/item_save', methods=['POST'])
+@require_admin
 def doc_item_save():
 
     #if 'add' in request.form:
@@ -62,6 +65,7 @@ def doc_show(category_id):
 
 # 目录新建/编辑
 @main.route('/doc/catalog/submit/<int:category_id>/<int:catalog_id>')
+@require_admin
 def doc_catalog_submit(category_id, catalog_id):
 
     if category_id==0:
@@ -80,6 +84,7 @@ def doc_catalog_submit(category_id, catalog_id):
 
 # 保存目录
 @main.route('/doc/catalog_save', methods=['POST'])
+@require_admin
 def doc_catalog_save():
     #if 'add' in request.form:
     #if 'Like' in request.form.values():
@@ -106,6 +111,7 @@ def doc_catalog_save():
 
 # 项目列表
 @main.route('/doc/catalog/list/<int:item_id>')
+@require_staff
 def doc_catalog_list_ajax(item_id):
     catalogs = Catalog.objects(item_id=item_id)
 
@@ -113,6 +119,7 @@ def doc_catalog_list_ajax(item_id):
 
 # 删除目录
 @main.route('/doc/catalog/del', methods=['POST'])
+@require_admin
 def doc_catalog_del():
     id = force_int(request.form['id'], 0)
 
@@ -125,6 +132,7 @@ def doc_catalog_del():
 
 # 新建/编辑文档
 @main.route('/doc/submit/<int:item_id>/<int:doc_id>')
+@require_admin
 def doc_submit(item_id, doc_id):
 
     if item_id==0:
@@ -145,6 +153,7 @@ def doc_submit(item_id, doc_id):
 
 # 保存文档
 @main.route('/doc/save', methods=['POST'])
+@require_admin
 def doc_save():
     #if 'add' in request.form:
     #if 'Like' in request.form.values():
@@ -173,6 +182,7 @@ def doc_save():
 
 # 文档详情
 @main.route('/doc/sub_show/<int:doc_id>')
+@require_staff
 def doc_sub_show(doc_id):
     doc = Doc.objects(_id=doc_id).first()
     # markdown 格式转换html
@@ -183,6 +193,7 @@ def doc_sub_show(doc_id):
 
 # 删除文档
 @main.route('/doc/delete/<int:id>', methods=['POST','GET'])
+@require_admin
 def doc_delete(id):
     try:
         doc = Doc._get_collection()

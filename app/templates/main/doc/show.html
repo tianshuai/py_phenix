@@ -385,7 +385,7 @@
         <!-- 新建栏 -->
         <div class="doc-left-newbar">
 
-          {% if 1==1 %}
+          {% if g.is_admin %}
           <div><a href="{{ url_for('main.doc_submit', item_id=category._id, doc_id=0) }}" id="new-like"><i class="icon-plus"></i>&nbsp;新建页面</a></div>
             <div><a href="{{ url_for("main.doc_catalog_submit", category_id=category._id, catalog_id=0) }}" id="dir-like" ><i class="icon-folder-open"></i>新建目录</a></div>
 
@@ -403,14 +403,12 @@
         <!-- 编辑栏 -->
         <div class='page-edit-link pull-right hide'>
           <ul class="inline">
-            {% if 1==1 %}
               <li><a href="" id="share-page" title="分享该接口访问地址给你的好友">分享</a></li>
+              {% if g.is_admin %}
               <!--<li><a href="" id="copy-link" title="复制该接口到新接口">复制</a></li>-->
               <li><a href="" id="edit-link" title="编辑接口">编辑</a></li>
-              <!--<li><a href="" title="删除接口" onclick="return confirm('确认删除吗？');return false;" id="delete-link">删除</a></li>-->
-              {% else %}
-              <li></li>
-              <li></li>
+              <li><a href="" title="删除接口" onclick="return confirm('确认删除吗？');return false;" id="delete-link">删除</a></li>
+
               {% endif %}
           </ul>
         </div>

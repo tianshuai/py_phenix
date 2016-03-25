@@ -23,24 +23,23 @@
   </head>
   <body>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <ul class="flashes">
-      {% for category, message in messages %}
-        <li class="alert alert-{{ category }}" data-dismiss="alert">{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-
     {% block layout_header %}{% endblock %}
 
     <div class="container">
+
+      <span class="blank50"></span>
       <div class="main">
         <!--消息提醒-->
-        <%= render partial: 'shared/flash',locals: { flash: flash }%>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="alert alert-{{ category }}" data-dismiss="alert">{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
       </div>
-      <span class="blank50"></span>
 
     {% block layout_content %}
           {% block content %}{% endblock %}

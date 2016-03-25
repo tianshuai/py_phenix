@@ -43,6 +43,7 @@
         },
         success: function(data){
           if(data.success){
+            alert('注册成功');
             window.location.href=data.redirect_to;
           }else{
             alert(data.message);

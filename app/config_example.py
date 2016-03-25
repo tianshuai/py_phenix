@@ -16,3 +16,5 @@ DEBUG = True
 
 CSRF_ENABLED = True
 SECRET_KEY = 'taihuoniao_tools'
+
+PASSWORD_SECRET = 'thn'
