@@ -62,6 +62,19 @@
 			<a class="btn btn-primary  btn-large" href="">Demo</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a class="btn  btn-large" href="">帮助教程&nbsp;<i class="icon-circle-arrow-right"></i></a>
       -->
+    <span class="blank20"></span>
+    <div>
+      <span>移动端：</span>
+      {% for d in app_users %}
+      <span><a href="javascript:void(0);">{{ d.account }}</a><span> &nbsp;&nbsp;
+      {% endfor %}
+    </div>
+    <div>
+      <span>服务器端：</span>
+      {% for d in server_users %}
+      <span><a href="javascript:void(0);">{{ d.account }}</a><span> &nbsp;&nbsp;
+      {% endfor %}
+    </div>
 		</p>
 
       <hr>

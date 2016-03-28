@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, url_for, request, redirect, flash, g
 from .base import main 
-from ..models import Category, Catalog, Doc
+from ..models import Category, Catalog, Doc, User
 from ..helpers import force_int, require_staff, require_admin
 # markdown 格式转换
 import mistune
@@ -9,7 +9,9 @@ import mistune
 # 项目首页
 @main.route('/doc')
 def doc():
-    return render_template('doc/index.html')
+    app_users = User.objects(role_id=2)
+    server_users = User.objects(role_id=5)
+    return render_template('doc/index.html', app_users=app_users, server_users=server_users)
 
 
 # 项目列表
