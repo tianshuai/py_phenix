@@ -133,20 +133,19 @@
         $(".doc-left li").each(function(){
           url = $(this).children("a").attr("href");
           //如果链接中包含当前url的信息，两者相匹配
-          if (url && url.indexOf(str) >= 0 ) {
+          if (url && url==str ) {
             //激活菜单
             $(this).addClass("active");
             //如果该菜单是子菜单，则还需要把父菜单打开才行
             if ($(this).parent('.child-ul')) {
-            //alert(33);
                 $(this).parent('.child-ul').show();
                 $(this).parent('.child-ul').parent('li').children("a").children('i').attr("class","icon-chevron-down");
             };
             //获取对应的page_id
-              page_id = $(this).children("a").attr("data-page-id");
-              if (page_id != '' && page_id !='#') {
-                  change_page(page_id)
-              };
+            page_id = $(this).children("a").attr("data-page-id");
+            if (page_id != '' && page_id !='#') {
+                change_page(page_id)
+            };
           };
         })
       }
