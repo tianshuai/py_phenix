@@ -122,14 +122,14 @@
     $(function(){
 
       //自动根据url把当前菜单激活
-      var page_id = GetQueryString('page_id');
+      var page_id = GetQueryString('doc_id');
       //如果中没有指定page_id，则判断有没有父目录为0的页面，默认打开第一个
       if(!page_id) {
         page_id = $(".doc-left li").children("a").attr("data-page-id");
       };
       if(page_id !=null && page_id.toString().length>0)
       {
-        var str = 'page_id='+page_id;
+        var str = '/doc/sub_show/'+page_id;
         $(".doc-left li").each(function(){
           url = $(this).children("a").attr("href");
           //如果链接中包含当前url的信息，两者相匹配
@@ -138,6 +138,7 @@
             $(this).addClass("active");
             //如果该菜单是子菜单，则还需要把父菜单打开才行
             if ($(this).parent('.child-ul')) {
+            //alert(33);
                 $(this).parent('.child-ul').show();
                 $(this).parent('.child-ul').parent('li').children("a").children('i').attr("class","icon-chevron-down");
             };
