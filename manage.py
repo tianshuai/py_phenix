@@ -1,6 +1,6 @@
 #!env/bin/python
 from app.app import app
-from flask.ext.script import Manager
+from flask_script import Manager
 
 manager = Manager(app)
 
