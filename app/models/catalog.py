@@ -4,7 +4,7 @@ from .base import *
 
 class Catalog(db.Document):
 
-    _id = db.IntField(primary_key=True, required=True, unique=True)
+    _id = db.IntField(primary_key=True, required=True)
     name = db.StringField(max_value=50, required=True)
     user_id = db.IntField(required=True)
     item_id = db.IntField(required=True)

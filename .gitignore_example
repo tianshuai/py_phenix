@@ -1,0 +1,7 @@
+.gitignore
+__pycache__
+uwsgi.ini
+app/config.py
+deploy.sh
+.*
+!.gitignore_example

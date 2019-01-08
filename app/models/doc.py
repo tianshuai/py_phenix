@@ -4,7 +4,7 @@ from .base import *
 
 class Doc(db.Document):
 
-    _id = db.IntField(primary_key=True, required=True, unique=True)
+    _id = db.IntField(primary_key=True, required=True)
     title = db.StringField(max_value=50, required=True)
     content = db.StringField(max_value=100000, required=True)
     user_id = db.IntField(required=True)

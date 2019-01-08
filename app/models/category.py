@@ -4,7 +4,7 @@ from .base import *
 
 class Category(db.Document):
 
-    _id = db.IntField(primary_key=True, required=True, unique=True)
+    _id = db.IntField(primary_key=True, required=True)
     mark = db.StringField(max_length=10)
     name = db.StringField(max_value=20, required=True, unique=True)
     user_id = db.IntField(required=True)

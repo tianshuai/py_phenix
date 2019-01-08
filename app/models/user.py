@@ -5,7 +5,7 @@ from ..helpers import gen_sha1
 
 class User(db.Document):
 
-    _id = db.IntField(primary_key=True, required=True, unique=True)
+    _id = db.IntField(primary_key=True, required=True)
     account = db.StringField(max_value=20, required=True, unique=True)
     email = db.StringField(max_value=50)
     password = db.StringField(max_value=20)
