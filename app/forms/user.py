@@ -65,6 +65,8 @@ class SignupForm(BaseForm):
     def save(self):
         data = self.data;
         data.pop('password_confirm')
+        if 'csrf_token' in data:
+            data.pop('csrf_token')
         user = User(**data)
         user.save()
         return user
